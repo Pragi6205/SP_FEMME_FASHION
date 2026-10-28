@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {
@@ -11,6 +10,13 @@ const nextConfig: NextConfig = {
         as: "*.css",
       },
     },
+  },
+  images: {
+    // Temporary editorial imagery is served from Unsplash. Once the boutique's own
+    // photography is added to /public/images, this entry can be removed.
+    remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com", pathname: "/**" }],
+    formats: ["image/avif", "image/webp"],
+    qualities: [75, 90, 95],
   },
 };
 

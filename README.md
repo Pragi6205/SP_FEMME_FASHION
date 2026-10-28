@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SP Femme Fashion — website
 
-## Getting Started
-
-First, run the development server:
+Editorial website for SP Femme Fashion, a custom fashion and embroidery atelier.
+Built with Next.js 16 (App Router, Cache Components), TypeScript, Tailwind CSS v4, Motion and Lucide.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # then fill in the values
+npm run dev                  # http://localhost:3000
+npm run build && npm start   # production
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Before launch — what to fill in
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| What | Where |
+| --- | --- |
+| WhatsApp number, phone, email, Instagram | `.env.local` (see `.env.example`) |
+| Address, map link, opening hours, other social links | `src/config/site.ts` |
+| Enquiry delivery (form backend) | `ENQUIRY_FORWARD_URL` in `.env.local` |
+| Designer name, quote and introduction | `src/data/content.ts` → `craftStory.founder` |
+| Real photography | `src/data/images.ts` (swap `src` for `/images/your-file.jpg`) |
+| Portfolio pieces | `src/data/designs.ts` |
+| Collections, services, journal articles | `src/data/collections.ts`, `services.ts`, `journal.ts` |
+| Embroidery video (optional) | `src/data/content.ts` → `craftVideo.src` |
+| Budget ranges, service list, upload limits | `src/config/form.ts` |
+| Privacy Policy & Terms (templates — have them reviewed) | `src/app/privacy-policy`, `src/app/terms` |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Empty contact fields are hidden automatically, so nothing unconfirmed is ever shown.
 
-## Learn More
+## Images
 
-To learn more about Next.js, take a look at the following resources:
+All current photographs are temporary Unsplash images used to set the art direction. Replace them
+with the boutique's own work in `src/data/images.ts`; every page reads from that file. If all images
+become local, the `images.unsplash.com` entry in `next.config.ts` can be removed.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Forms
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The consultation form (`/book-consultation`) and contact form post to `src/app/api/enquiry/route.ts`,
+which validates the fields and reference images and forwards them as multipart form data to
+`ENQUIRY_FORWARD_URL`. Until that is configured the API returns 503 and the form shows a clear
+"not sent" message with a pre-filled WhatsApp fallback — it never reports a false success.
 
-## Deploy on Vercel
+Links can pre-fill the form: `/book-consultation?service=bridal&design=maroon-heirloom`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/app/            routes (home, collections, services, gallery, journal, consultation, contact, legal)
+src/components/     layout, home sections, gallery, forms, motion and UI primitives
+src/config/         business details and form options
+src/data/           images, collections, designs, journal, services, studio content
+```
